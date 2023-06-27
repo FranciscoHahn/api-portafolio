@@ -452,12 +452,48 @@ class CompraModel extends CI_Model {
         $this->db->set('estado', 'finalizada');
         $this->db->where('id', $atencion_id);
         $this->db->update('atencion_mesa');
-        
+
         $this->db->set('estado', 'disponible');
         $this->db->where('id', $atencion->mesa_id);
         $this->db->update('mesas');
 
         return $this->utilidades->buildResponse(true, 'success', 200, 'Estado de atención actualizado correctamente');
+    }
+
+    public function ventas_fecha($fecha) {
+        // Convertir la fecha al formato 'yyyy-mm-dd'
+        $fecha_convertida = date('Y-m-d', strtotime(str_replace('-', '/', $fecha)));
+
+        $this->db->select('*');
+        $this->db->from('atencion_mesa');
+        $this->db->where_in('atencion_mesa.estado', array('pagado', 'finalizada'));
+        $this->db->where('DATE(atencion_mesa.fecha_atencion)', $fecha_convertida);
+        $ventas = $this->db->get()->result();
+        foreach ($ventas as $venta) {
+            $query = $this->db
+                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion')
+                            ->from('pedidos')
+                            ->join('preparaciones', 'pedidos.preparacion_id = preparaciones.id')
+                            ->where('pedidos.atencion_id', $venta->id)->get()->result_array();
+            $venta->pedidos = $query;
+        }
+        return $this->utilidades->buildResponse(true, 'success', 200, 'listado de ventas', array('ventas' => $ventas));
+    }
+
+    public function ventas_todas() {
+        $this->db->select('*');
+        $this->db->from('atencion_mesa');
+        $this->db->where_in('atencion_mesa.estado', array('pagado', 'finalizada'));
+        $ventas = $this->db->get()->result();
+        foreach ($ventas as $venta) {
+            $query = $this->db
+                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion')
+                            ->from('pedidos')
+                            ->join('preparaciones', 'pedidos.preparacion_id = preparaciones.id')
+                            ->where('pedidos.atencion_id', $venta->id)->get()->result_array();
+            $venta->pedidos = $query;
+        }
+        return $this->utilidades->buildResponse(true, 'success', 200, 'listado de ventas', array('ventas' => $ventas));
     }
 
 }

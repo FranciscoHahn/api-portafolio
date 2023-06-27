@@ -194,4 +194,16 @@ class Compra extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function ventas_fecha() {
+        $response = $this->CompraModel->ventas_fecha($this->input->post('fecha'));
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($response);
+    }
+
+    public function ventas_todas() {
+        $response = $this->CompraModel->ventas_todas();
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($response);
+    }
+
 }
