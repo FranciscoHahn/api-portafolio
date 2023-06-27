@@ -464,14 +464,14 @@ class CompraModel extends CI_Model {
         // Convertir la fecha al formato 'yyyy-mm-dd'
         $fecha_convertida = date('Y-m-d', strtotime(str_replace('-', '/', $fecha)));
 
-        $this->db->select('atecion_mesa.*, FLOOR(atencion_mesa.total_cancelado) AS int_total_cancelado, FLOOR(atencion_mesa.total_cuenta) AS int_total_cuenta');
+        $this->db->select('atencion_mesa.*, FLOOR(atencion_mesa.total_cancelado) AS int_total_cancelado, FLOOR(atencion_mesa.total_cuenta) AS int_total_cuenta');
         $this->db->from('atencion_mesa');
         $this->db->where_in('atencion_mesa.estado', array('pagado', 'finalizada'));
         $this->db->where('DATE(atencion_mesa.fecha_atencion)', $fecha_convertida);
         $ventas = $this->db->get()->result();
         foreach ($ventas as $venta) {
             $query = $this->db
-                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion, preparaciones.categoria AS categoria_preparacion, pedidos.estado estado_pedido')
+                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion, preparaciones.categoria AS categoria_preparacion, pedidos.estado estado_pedido, FLOOR(pedidos.precio) AS int_precio_pedido')
                             ->from('pedidos')
                             ->join('preparaciones', 'pedidos.preparacion_id = preparaciones.id')
                             ->where('pedidos.atencion_id', $venta->id)->get()->result_array();
@@ -487,7 +487,7 @@ class CompraModel extends CI_Model {
         $ventas = $this->db->get()->result();
         foreach ($ventas as $venta) {
             $query = $this->db
-                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion, preparaciones.categoria AS categoria_preparacion, pedidos.estado estado_pedido')
+                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion, preparaciones.categoria AS categoria_preparacion, pedidos.estado estado_pedido, FLOOR(pedidos.precio) AS int_precio_pedido')
                             ->from('pedidos')
                             ->join('preparaciones', 'pedidos.preparacion_id = preparaciones.id')
                             ->where('pedidos.atencion_id', $venta->id)->get()->result_array();
