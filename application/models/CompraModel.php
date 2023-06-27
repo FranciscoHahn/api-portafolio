@@ -471,7 +471,7 @@ class CompraModel extends CI_Model {
         $ventas = $this->db->get()->result();
         foreach ($ventas as $venta) {
             $query = $this->db
-                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion')
+                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion, preparaciones.categoria AS categoria_preparacion')
                             ->from('pedidos')
                             ->join('preparaciones', 'pedidos.preparacion_id = preparaciones.id')
                             ->where('pedidos.atencion_id', $venta->id)->get()->result_array();
@@ -487,7 +487,7 @@ class CompraModel extends CI_Model {
         $ventas = $this->db->get()->result();
         foreach ($ventas as $venta) {
             $query = $this->db
-                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion')
+                            ->select('pedidos.id, pedidos.atencion_id, pedidos.descripcion, pedidos.cantidad, pedidos.precio, preparaciones.nombre AS nombre_preparacion, preparaciones.categoria AS categoria_preparacion')
                             ->from('pedidos')
                             ->join('preparaciones', 'pedidos.preparacion_id = preparaciones.id')
                             ->where('pedidos.atencion_id', $venta->id)->get()->result_array();
