@@ -464,7 +464,7 @@ class CompraModel extends CI_Model {
         // Convertir la fecha al formato 'yyyy-mm-dd'
         $fecha_convertida = date('Y-m-d', strtotime(str_replace('-', '/', $fecha)));
 
-        $this->db->select('*');
+        $this->db->select('atecion_mesa.*, FLOOR(atencion_mesa.total_cancelado) AS int_total_cancelado, FLOOR(atencion_mesa.total_cuenta) AS int_total_cuenta');
         $this->db->from('atencion_mesa');
         $this->db->where_in('atencion_mesa.estado', array('pagado', 'finalizada'));
         $this->db->where('DATE(atencion_mesa.fecha_atencion)', $fecha_convertida);
@@ -481,7 +481,7 @@ class CompraModel extends CI_Model {
     }
 
     public function ventas_todas() {
-        $this->db->select('*');
+        $this->db->select('atencion_mesa.*, FLOOR(atencion_mesa.total_cancelado) AS int_total_cancelado, FLOOR(atencion_mesa.total_cuenta) AS int_total_cuenta');
         $this->db->from('atencion_mesa');
         $this->db->where_in('atencion_mesa.estado', array('pagado', 'finalizada'));
         $ventas = $this->db->get()->result();
